@@ -6,9 +6,10 @@
   <meta name="description" content="Traditional art, Blender modeling, and animation.">
   <title>Creative Work</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/creative-collections.css">
   <script src="js/main.js" defer></script>
 </head>
-<body class="creative-page">
+<body class="creative-collections-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation"><span class="menu-icon" aria-hidden="true"></span><span class="sr-only">Toggle navigation</span></button>
@@ -16,73 +17,51 @@
       <a href="projects.html">Work</a><a href="research.html">Research</a><a href="creative.html" aria-current="page">Creative</a><a href="about.html">About</a><a href="resume.html">Resume</a><a class="nav-contact" href="#contact">Contact</a>
     </nav>
   </header>
-  <main id="main" class="page-shell interior-page creative-content">
-    <header class="page-intro creative-page-intro reveal">
+  <main id="main" class="page-shell interior-page creative-collections">
+    <header class="page-intro creative-collections-intro reveal">
       <p class="eyebrow">Design practice</p>
       <h1>CREATIVE WORK</h1>
-      <p class="intro-deck">A collection of traditional art, 3D modeling, and animation developed through formal art education and independent practice.</p>
+      <p class="intro-deck">A collection of traditional drawing, 3D modeling, and animation developed through formal art education and independent practice.</p>
     </header>
 
-    <section class="creative-education" aria-labelledby="creative-education-title">
+    <section class="creative-education-note" aria-labelledby="creative-education-title">
       <p class="eyebrow" id="creative-education-title">Formal Art Education</p>
-      <div><h2>Children's Art School No. 11</h2><p>Kyiv, Ukraine <span aria-hidden="true">·</span> Art School Diploma — 2022</p></div>
-    </section>
-
-    <section class="creative-category" aria-labelledby="traditional-art-title">
-      <header class="creative-category-heading"><p class="eyebrow">01 / Traditional Art</p><h2 id="traditional-art-title">Traditional Art</h2></header>
-      <div class="creative-subsections">
-        <section class="creative-subsection" aria-labelledby="art-school-title">
-          <h3 id="art-school-title">Art School</h3>
-          <div class="creative-placeholder-grid" aria-label="Art school artwork gallery placeholders">
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an art school drawing"><span>Artwork placeholder</span></div>
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an art school drawing"><span>Artwork placeholder</span></div>
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an art school drawing"><span>Artwork placeholder</span></div>
-          </div>
-        </section>
-        <section class="creative-subsection" aria-labelledby="independent-art-title">
-          <h3 id="independent-art-title">Independent Work</h3>
-          <div class="creative-placeholder-grid" aria-label="Independent artwork gallery placeholders">
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an independent drawing"><span>Artwork placeholder</span></div>
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an independent drawing"><span>Artwork placeholder</span></div>
-            <div class="creative-media-placeholder" role="img" aria-label="Placeholder for an independent drawing"><span>Artwork placeholder</span></div>
-          </div>
-        </section>
+      <div class="creative-education-copy">
+        <h2>Children’s Art School No. 11</h2>
+        <p>Kyiv, Ukraine <span aria-hidden="true">·</span> Art School Diploma <span aria-hidden="true">·</span> 2022</p>
+        <p>A specialized arts school focused on visual arts education and developing young artists.</p>
+        <a class="creative-school-map" href="https://www.google.com/maps/search/?api=1&amp;query=Children%27s%20Art%20School%20No.%2011%2C%20Yuriia%20Paskhalina%20St%2015A%2C%20Kyiv%2C%20Ukraine%2C%2002096" target="_blank" rel="noopener noreferrer">View School on Map <span aria-hidden="true">→</span></a>
       </div>
     </section>
-    <template id="creative-image-item-template">
-      <a class="creative-lightbox" data-lightbox data-lightbox-group="traditional-gallery" data-image-src="assets/images/REPLACE_WITH_ARTWORK.jpg" data-alt="Add an accurate description of the artwork"><img data-src="assets/images/REPLACE_WITH_ARTWORK.jpg" alt="Add an accurate description of the artwork" loading="lazy"></a>
-    </template>
 
-    <section class="creative-category" aria-labelledby="modeling-title">
-      <header class="creative-category-heading"><p class="eyebrow">02 / Blender</p><h2 id="modeling-title">3D Modeling</h2></header>
-      <p class="creative-category-deck">Models, renders, materials, lighting, environments, and personal design experiments.</p>
-      <div class="creative-model-placeholder creative-media-placeholder" role="img" aria-label="Placeholder for a Blender model or render"><span>Blender work placeholder</span></div>
-      <template id="creative-model-card-template">
-        <article class="creative-model-card">
-          <div class="creative-model-media">
-            <a class="creative-lightbox" data-lightbox data-lightbox-group="model-gallery" data-image-src="assets/images/REPLACE_WITH_RENDER.jpg" data-alt="Add an accurate description of the render"><img data-src="assets/images/REPLACE_WITH_RENDER.jpg" alt="Add an accurate description of the render" loading="lazy"></a>
-            <a class="creative-lightbox creative-optional-media" data-lightbox data-lightbox-group="model-gallery" data-image-src="assets/images/REPLACE_WITH_WIREFRAME.jpg" data-alt="Wireframe view"><img data-src="assets/images/REPLACE_WITH_WIREFRAME.jpg" alt="Wireframe view" loading="lazy"></a>
-            <a class="creative-lightbox creative-optional-media" data-lightbox data-lightbox-group="model-gallery" data-image-src="assets/images/REPLACE_WITH_PROCESS_IMAGE.jpg" data-alt="Process image"><img data-src="assets/images/REPLACE_WITH_PROCESS_IMAGE.jpg" alt="Process image" loading="lazy"></a>
-          </div>
-          <div class="creative-model-copy"><h3>Project title</h3><p>Short project description.</p><span class="creative-tag">Blender</span><a class="creative-detail-link" href="creative-model-01.html">Project details</a></div>
-        </article>
-      </template>
-    </section>
-
-    <section class="creative-category" aria-labelledby="animation-title">
-      <header class="creative-category-heading"><p class="eyebrow">03 / Motion</p><h2 id="animation-title">Animation</h2></header>
-      <p class="creative-category-deck">Short animations, motion experiments, and rendered animation projects.</p>
-      <div class="creative-video-placeholder creative-media-placeholder" role="img" aria-label="Placeholder for an animation video"><span>Animation placeholder</span></div>
-      <template id="creative-animation-card-template">
-        <article class="creative-animation-card">
-          <video controls preload="none" playsinline data-lazy-video data-poster="assets/images/REPLACE_WITH_POSTER.jpg" aria-label="Creative animation video">
-            <source data-src="assets/videos/REPLACE_WITH_ANIMATION.mp4" type="video/mp4">
-          </video>
-          <h3>Project title</h3>
-          <p>Short project description.</p>
-          <a class="creative-detail-link" href="creative-animation-01.html">Project details</a>
-        </article>
-      </template>
+    <section class="creative-collection-grid" aria-label="Creative collections">
+      <a class="creative-collection-card" href="art-school.html">
+        <div class="creative-card-visual" aria-hidden="true"></div>
+        <div class="creative-card-copy">
+          <div class="creative-card-tags"><span>Drawing</span><span>Visual Studies</span></div>
+          <h2>ART SCHOOL</h2>
+          <p>Traditional drawing and visual studies from formal art-school education.</p>
+          <span class="creative-explore">Explore <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="creative-collection-card" href="independent-art.html">
+        <div class="creative-card-visual" aria-hidden="true"></div>
+        <div class="creative-card-copy">
+          <div class="creative-card-tags"><span>Drawing</span><span>Independent Practice</span></div>
+          <h2>INDEPENDENT ART</h2>
+          <p>Drawing and visual work created independently outside formal art-school study.</p>
+          <span class="creative-explore">Explore <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+      <a class="creative-collection-card" href="blender.html">
+        <div class="creative-card-visual" aria-hidden="true"></div>
+        <div class="creative-card-copy">
+          <div class="creative-card-tags"><span>Blender</span><span>3D</span></div>
+          <h2>BLENDER</h2>
+          <p>3D modeling, rendering, and animation.</p>
+          <span class="creative-explore">Explore <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
     </section>
   </main>
   <section class="portfolio-contact" id="contact" aria-labelledby="contact-title">

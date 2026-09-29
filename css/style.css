@@ -326,6 +326,62 @@ h3 { font-size: 20px; line-height: 1.25; }
   .creative-callout-art { width: min(100%, 180px); height: 72px; }
 }
 
+body { line-height: 1.55; }
+.site-nav a { padding-block: 7px; font-size: 14px; font-weight: 600; letter-spacing: .55px; }
+.eyebrow, .placeholder-label { font-size: 11px; letter-spacing: 1.45px; }
+.text-link { font-size: 14px; }
+.button { font-size: 13px; }
+.hero-affiliation { font-size: 13px; }
+.drawing-dimension, .visual-index { font-size: 11px; }
+.placeholder-caption { font-size: 12px; }
+.placeholder-caption small { font-size: 11px; }
+.card-visual > span, .card-visual > b { font-size: 11px; }
+.card-kicker { font-size: 11px; letter-spacing: 1px; }
+.card-info p:not(.card-kicker) { font-size: 14px; }
+.tag-row span { font-size: 11px; }
+.plot-topline, .plot-bottomline { font-size: 11px; letter-spacing: .6px; }
+.plot-grid small { font-size: 13px; }
+.section-number { font-size: 12px; }
+.section-number span { font-size: 11px; letter-spacing: 1px; }
+.timeline p { font-size: 14px; }
+.timeline-period { font-size: 12px; letter-spacing: .6px; }
+.case-index-item p { font-size: 13px; }
+.course-item summary span { font-size: 13px; }
+.course-item > p { font-size: 14px; }
+.media-placeholder .placeholder-label { font-size: 11px; }
+.research-meta { font-size: 13px; }
+.workflow-step > span { font-size: 11px; letter-spacing: .8px; }
+.workflow-step p, .output-list p { font-size: 14px; }
+.contact-items span { font-size: 11px; letter-spacing: 1px; }
+.footer-bottom { font-size: 12px; }
+.resume-contact { font-size: 13px; }
+.resume-entry-heading > span, .resume-entry > p, .resume-detail, .resume-coursework { font-size: 13px !important; }
+.resume-entry ul { font-size: 13px; }
+.resume-skills dt, .resume-skills dd { font-size: 13px; }
+.resume-project-type { font-size: 12px; }
+.resume-preview > span { font-size: 13px; }
+.home-footer p, .home-footer-contact, .home-footer-links { font-size: 14px; }
+.resume-contact-identity > p:last-child, .resume-contact-details { font-size: 14px; }
+.portfolio-contact-details { font-size: 15px; }
+.creative-education-note div p { font-size: 13px; }
+.creative-education-copy > p:nth-of-type(2) { font-size: 14px; line-height: 1.55; }
+.creative-education-note .creative-school-map { font-size: 13px; }
+.creative-card-copy p { font-size: 15px; }
+.creative-card-tags span { font-size: 12px; }
+.creative-explore, .creative-detail-back { font-size: 13px; }
+.creative-category-tabs a { font-size: 13px; }
+.creative-model-copy p, .creative-animation-card p { font-size: 14px; }
+.creative-tag { font-size: 11px; }
+.lightbox figcaption { font-size: 13px; }
+.lightbox-fullscreen { font-size: 12px !important; }
+
+@media (max-width: 850px) {
+  .site-nav a { padding-block: 13px; }
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }

@@ -121,7 +121,7 @@ h3 { font-size: 20px; line-height: 1.25; }
 .research-layout { display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(40px, 8vw, 100px); }
 .research-copy .eyebrow { color: #d1a34f; }.research-copy h2 { margin-bottom: 22px; color: var(--white); font-size: clamp(42px, 5vw, 63px); }.research-copy p:not(.eyebrow) { max-width: 410px; color: #d1d8d8; font-size: 14px; }
 .research-copy .tag-row { margin: 24px 0 28px; }.research-copy .tag-row span { border-color: rgba(255,255,255,.28); color: #e3e6e2; }
-.plot-placeholder { min-height: 340px; display: flex; flex-direction: column; padding: 18px; border: 1px solid rgba(255,255,255,.34); background-color: #183b52; background-image: linear-gradient(rgba(237, 237, 222, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(237, 237, 222, .06) 1px, transparent 1px), linear-gradient(rgba(16, 45, 67, .78), rgba(16, 45, 67, .78)), url("../PortWebsite/images/gallery/fulls/09.jpg"); background-size: 34px 34px, 34px 34px, cover, cover; background-position: 0 0, 0 0, center, center; }
+.plot-placeholder { min-height: 340px; display: flex; flex-direction: column; padding: 18px; border: 1px solid rgba(255,255,255,.34); background-color: #183b52; background-image: linear-gradient(rgba(237, 237, 222, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(237, 237, 222, .06) 1px, transparent 1px), linear-gradient(rgba(16, 45, 67, .78), rgba(16, 45, 67, .78)), url("../assets/images/gradients/09.jpg"); background-size: 34px 34px, 34px 34px, cover, cover; background-position: 0 0, 0 0, center, center; }
 .plot-topline, .plot-bottomline { display: flex; justify-content: space-between; gap: 12px; color: #d6b56d; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
 .plot-grid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #f7f5ef; }
 .plot-grid span { font: 23px var(--serif); }.plot-grid small { max-width: 250px; margin-top: 8px; color: #c5d0d0; font-size: 11px; }
@@ -221,11 +221,11 @@ h3 { font-size: 20px; line-height: 1.25; }
 .portfolio-footer a { color: var(--navy); text-decoration: none; }
 
 .creative-page { background: var(--paper); }
-.visual-wind::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../PortWebsite/images/gallery/fulls/09.jpg"); }
-.visual-recycle::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../PortWebsite/images/gallery/fulls/01.jpg"); }
-.visual-dynamics::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../PortWebsite/images/gallery/fulls/08.jpg"); }
-.visual-truss::before { background-image: linear-gradient(rgba(243, 241, 235, .2), rgba(243, 241, 235, .2)), url("../PortWebsite/images/gallery/fulls/02.jpg"); }
-.visual-cad::before { background-image: linear-gradient(rgba(243, 241, 235, .2), rgba(243, 241, 235, .2)), url("../PortWebsite/images/gallery/fulls/03.jpg"); }
+.visual-wind::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../assets/images/gradients/09.jpg"); }
+.visual-recycle::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../assets/images/gradients/01.jpg"); }
+.visual-dynamics::before { background-image: linear-gradient(rgba(243, 241, 235, .18), rgba(243, 241, 235, .18)), url("../assets/images/gradients/08.jpg"); }
+.visual-truss::before { background-image: linear-gradient(rgba(243, 241, 235, .2), rgba(243, 241, 235, .2)), url("../assets/images/gradients/02.jpg"); }
+.visual-cad::before { background-image: linear-gradient(rgba(243, 241, 235, .2), rgba(243, 241, 235, .2)), url("../assets/images/gradients/03.jpg"); }
 .creative-page-intro { max-width: 860px; margin-bottom: 48px; }
 .creative-page-intro h1 { margin-bottom: 18px; font-size: 60px; }
 .creative-page-intro .eyebrow { margin-bottom: 16px; }
@@ -243,15 +243,15 @@ h3 { font-size: 20px; line-height: 1.25; }
 .creative-placeholder-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .creative-media-placeholder { min-width: 0; aspect-ratio: 4 / 3; display: grid; place-items: center; padding: 16px; border: 1px solid var(--line); border-radius: 3px; background: #e7e9e4; color: var(--muted); text-align: center; font: 15px/1.4 var(--serif); transition: border-color .2s ease, transform .2s ease; }
 .creative-media-placeholder:hover { transform: translateY(-2px); border-color: #aab5b4; }
-.creative-subsection:first-child .creative-media-placeholder:nth-child(1) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../PortWebsite/images/gallery/fulls/04.jpg"); background-size: cover; }
-.creative-subsection:first-child .creative-media-placeholder:nth-child(2) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../PortWebsite/images/gallery/fulls/08.jpg"); background-size: cover; }
-.creative-subsection:first-child .creative-media-placeholder:nth-child(3) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../PortWebsite/images/gallery/fulls/02.jpg"); background-size: cover; }
-.creative-subsection:last-child .creative-media-placeholder:nth-child(1) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../PortWebsite/images/gallery/fulls/01.jpg"); background-size: cover; }
-.creative-subsection:last-child .creative-media-placeholder:nth-child(2) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../PortWebsite/images/gallery/fulls/12.jpg"); background-size: cover; }
-.creative-subsection:last-child .creative-media-placeholder:nth-child(3) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../PortWebsite/images/gallery/fulls/04.jpg"); background-size: cover; }
+.creative-subsection:first-child .creative-media-placeholder:nth-child(1) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../assets/images/gradients/04.jpg"); background-size: cover; }
+.creative-subsection:first-child .creative-media-placeholder:nth-child(2) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../assets/images/gradients/08.jpg"); background-size: cover; }
+.creative-subsection:first-child .creative-media-placeholder:nth-child(3) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../assets/images/gradients/02.jpg"); background-size: cover; }
+.creative-subsection:last-child .creative-media-placeholder:nth-child(1) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../assets/images/gradients/01.jpg"); background-size: cover; }
+.creative-subsection:last-child .creative-media-placeholder:nth-child(2) { background-image: linear-gradient(rgba(243, 241, 235, .3), rgba(243, 241, 235, .3)), url("../assets/images/gradients/12.jpg"); background-size: cover; }
+.creative-subsection:last-child .creative-media-placeholder:nth-child(3) { background-image: linear-gradient(rgba(243, 241, 235, .32), rgba(243, 241, 235, .32)), url("../assets/images/gradients/04.jpg"); background-size: cover; }
 .creative-model-placeholder { width: min(100%, 760px); margin-inline: auto; }
-.creative-model-placeholder { background-image: linear-gradient(rgba(243, 241, 235, .28), rgba(243, 241, 235, .28)), url("../PortWebsite/images/gallery/fulls/12.jpg"); background-size: cover; }
-.creative-video-placeholder { width: min(100%, 760px); aspect-ratio: 16 / 9; margin-inline: auto; background-color: var(--navy-deep); background-image: linear-gradient(rgba(16, 45, 67, .38), rgba(16, 45, 67, .38)), url("../PortWebsite/images/gallery/fulls/03.jpg"); background-position: center; background-size: cover; color: #f2f0e8; }
+.creative-model-placeholder { background-image: linear-gradient(rgba(243, 241, 235, .28), rgba(243, 241, 235, .28)), url("../assets/images/gradients/12.jpg"); background-size: cover; }
+.creative-video-placeholder { width: min(100%, 760px); aspect-ratio: 16 / 9; margin-inline: auto; background-color: var(--navy-deep); background-image: linear-gradient(rgba(16, 45, 67, .38), rgba(16, 45, 67, .38)), url("../assets/images/gradients/03.jpg"); background-position: center; background-size: cover; color: #f2f0e8; }
 .creative-model-card { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(220px, .6fr); gap: 25px; padding-block: 22px; border-top: 1px solid var(--line); }
 .creative-model-media { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .creative-model-media a { min-width: 0; display: block; overflow: hidden; border: 1px solid var(--line); background: #e7e9e4; }

@@ -18,15 +18,17 @@ test("project badge follows its items", () => {
   assert.equal(C.isProjectNew("p", new Date("2026-11-01T00:00:00Z"), list), false);
   assert.equal(C.isProjectNew("other", new Date("2026-10-25T00:00:00Z"), list), false);
 });
-test("only the build video is registered", () => {
-  assert.deepEqual(C.items.map((i) => i.id), ["recycling-build-video"]);
+test("registry holds the two published entries", () => {
+  assert.deepEqual(C.items.map((i) => i.id), ["recycling-build-video", "digital-art-gallery"]);
+  assert.equal(C.items.find((i) => i.id === "digital-art-gallery").publishedAt, null);
 });
 
 test("pages: links, embed, and badge hooks", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
   const index = read("index.html");
-  assert.match(index, /<a class="work-card is-hero" href="project-recycling\.html" data-new-project="plastic-filament-recycling"/);
-  assert.equal((index.match(/data-new-project=/g) || []).length, 1);
+  assert.match(index, /id="latest-feed"/);
+  assert.match(index, /<a class="explore-link" href="portfolio\.html">Explore All Work/);
+  assert.equal((index.match(/data-new-project=|data-new-item=/g) || []).length, 0);
   assert.match(read("portfolio.html"), /<a class="work-card is-wide" href="project-recycling\.html" data-new-project="plastic-filament-recycling"/);
   const page = read("project-recycling.html");
   assert.match(page, /youtube-nocookie\.com\/embed\/VwZgvXHe2K4/);
@@ -48,8 +50,8 @@ test("Portfolio catalog sections and Home highlights", () => {
   }
   assert.match(work, /href="research\.html"/);
   const home = read("index.html");
-  assert.equal((home.match(/class="work-card/g) || []).length, 3);
-  assert.doesNotMatch(home, /Popsicle|Blender/);
+  assert.match(home, /Latest Updates/);
+  assert.doesNotMatch(home, /Popsicle|Blender|Wind Turbine|Suspension|class="work-card/);
   assert.doesNotMatch(work, /index-code|Academic|Coursework/);
 });
 
@@ -81,5 +83,57 @@ test("project pages have breadcrumb and back link", () => {
     const html = fs.readFileSync(path.join(root, p), "utf8");
     assert.match(html, /class="breadcrumb"/, p);
     assert.match(html, /← Back to Portfolio/, p);
+  }
+});
+
+const DAY = 24 * 60 * 60 * 1000;
+const T0 = Date.parse("2026-10-24T18:00:00Z");
+const mk = (id, daysAgo, extra = {}) => ({ id, projectId: id, title: id, category: "c", subtitle: "s", coverImage: "x.jpg", url: "x.html", status: "published", publishedAt: new Date(T0 - daysAgo * DAY).toISOString(), updatedAt: null, ...extra });
+const ids = (l, now = new Date(T0 + 1000)) => C.selectFeed(now, l).map((i) => i.id);
+
+test("feed: only two items exist -> exactly two, no fillers", () => assert.deepEqual(ids([mk("a", 1), mk("b", 90)]), ["a", "b"]));
+test("feed: four or more recent -> newest four, newest first", () => assert.deepEqual(ids([mk("a", 5), mk("b", 1), mk("c", 3), mk("d", 2), mk("e", 4)]), ["b", "d", "c", "e"]));
+test("feed: recent plus older fill up to four", () => assert.deepEqual(ids([mk("a", 2), mk("b", 100), mk("c", 200), mk("d", 300), mk("e", 400)]), ["a", "b", "c", "d"]));
+test("feed: nothing in 30 days -> three newest", () => assert.deepEqual(ids([mk("a", 40), mk("b", 50), mk("c", 60), mk("d", 70)]), ["a", "b", "c"]));
+test("feed: never empty without recent work", () => assert.equal(ids([mk("a", 400)]).length, 1));
+test("feed: new item < 7 days gets NEW, 7+ days does not", () => {
+  const l = [mk("a", 6.9), mk("b", 7.1)];
+  assert.equal(C.isItemNew("a", new Date(T0), l), true);
+  assert.equal(C.isItemNew("b", new Date(T0), l), false);
+});
+test("feed: meaningful update moves the existing card to top without duplicating or re-badging", () => {
+  const l = [mk("a", 60, { updatedAt: new Date(T0 - DAY).toISOString() }), mk("b", 10)];
+  assert.deepEqual(ids(l), ["a", "b"]);
+  assert.equal(C.isItemNew("a", new Date(T0), l), false);
+});
+test("feed: unchanged dates keep order regardless of other edits", () => {
+  const a = mk("a", 10), b = mk("b", 5);
+  assert.deepEqual(ids([a, b]), ids([{ ...a, subtitle: "typo fixed", url: "y.html" }, { ...b, coverImage: "z.jpg" }]));
+});
+test("feed: future and upcoming content is hidden", () => {
+  const l = [mk("a", 1), mk("future", -3), mk("soon", 1, { status: "upcoming" }), mk("bad", 1, { publishedAt: "garbage" })];
+  assert.deepEqual(ids(l), ["a"]);
+});
+test("feed: one card per project", () => {
+  assert.deepEqual(ids([mk("a", 1, { projectId: "p" }), mk("b", 2, { projectId: "p" }), mk("c", 3)]), ["a", "c"]);
+});
+test("feed: undated legacy entry shows last and never NEW", () => {
+  const l = [mk("old", 0, { publishedAt: null }), mk("a", 100)];
+  assert.deepEqual(ids(l), ["a", "old"]);
+  assert.equal(C.isItemNew("old", new Date(T0), l), false);
+});
+test("real feed: recycling first with NEW, art second, both unique", () => {
+  const feed = C.selectFeed(new Date("2026-10-25T00:00:00Z"));
+  assert.deepEqual(feed.map((i) => i.id), ["recycling-build-video", "digital-art-gallery"]);
+  assert.equal(C.isItemNew("recycling-build-video", new Date("2026-10-25T00:00:00Z")), true);
+  assert.equal(C.isItemNew("recycling-build-video", new Date("2026-11-01T00:00:00Z")), false);
+  assert.equal(C.isItemNew("digital-art-gallery", new Date("2026-10-25T00:00:00Z")), false);
+});
+test("every registry entry has a real cover image and valid destination", () => {
+  for (const i of C.items) {
+    assert.ok(fs.existsSync(path.join(root, i.coverImage)), i.coverImage);
+    const [file, hash] = i.url.split("#");
+    assert.ok(fs.existsSync(path.join(root, file)), i.url);
+    if (hash) assert.ok(fs.readFileSync(path.join(root, file), "utf8").includes(`id="${hash}"`), i.url);
   }
 });

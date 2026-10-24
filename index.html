@@ -14,38 +14,26 @@
   <header class="site-header"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation"><span class="menu-icon" aria-hidden="true"></span><span class="sr-only">Toggle navigation</span></button><nav class="site-nav" id="site-navigation" aria-label="Main navigation"><a href="index.html" aria-current="page">Home</a><div class="nav-dropdown"><a href="portfolio.html">Portfolio</a><button class="submenu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-submenu" aria-label="Portfolio sections"><span aria-hidden="true"></span></button><ul class="submenu" id="portfolio-submenu"><li><a href="portfolio.html#engineering-projects">Engineering Projects</a></li><li><a href="portfolio.html#research">Research</a></li><li><a href="portfolio.html#design-creative">Design &amp; Creative Work</a></li></ul></div><a href="about.html">About</a><a href="resume.html">Resume</a><a class="nav-contact" href="index.html#contact">Contact</a></nav></header>
 
   <main id="main">
-    <section class="hero page-shell gradient-field">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">Mechanical Engineering <span aria-hidden="true">·</span> Computer Science Minor</p>
-        <h1>IVAN<br><span>BEDNOSTIN</span></h1>
-        <p class="hero-line">Designing, building, simulating, and analyzing mechanical systems.</p>
-        <div class="button-row"><a class="button button-primary" href="portfolio.html">View Full Portfolio <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="resume.html">Resume</a><a class="text-link" href="https://github.com/ivnnsdg" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></div>
-      </div>
-      <div class="hero-visual hero-gradient-visual reveal" aria-hidden="true"><img src="assets/images/gradients/09.jpg" alt="" fetchpriority="high"></div>
+    <section class="home-intro page-shell" aria-labelledby="home-title">
+      <p class="eyebrow">Mechanical Engineering <span aria-hidden="true">·</span> Computer Science Minor</p>
+      <h1 id="home-title">Ivan Bednostin</h1>
+      <p class="hero-line">Designing, building, simulating, and analyzing mechanical systems.</p>
     </section>
 
-    <section class="featured-section page-shell" id="featured" aria-labelledby="featured-title">
-      <h2 id="featured-title">Selected work</h2>
-      <div class="work-grid">
-        <a class="work-card is-hero" href="project-recycling.html" data-new-project="plastic-filament-recycling">
-          <div class="work-media"><img src="assets/images/projects/recycling-build-video.jpg" alt="Plastic-to-Filament Recycling System build video frame" loading="lazy" decoding="async"></div>
-          <div class="work-info"><p class="card-kicker">Sustainability</p><h3>Plastic-to-Filament Recycling System</h3><p>Turning an unused Ender-3 V2 into a plastic recycling system.</p></div>
-        </a>
-        <a class="work-card" href="research.html">
-          <div class="work-media"><img src="assets/images/gradients/04.jpg" alt="" loading="lazy" decoding="async"></div>
-          <div class="work-info"><p class="card-kicker">Research</p><h3>Wind Turbine Research</h3><p>Yaw-misalignment classification.</p></div>
-        </a>
-        <a class="work-card" href="coming-soon.html?section=dynamics-suspension">
-          <div class="work-media"><img src="assets/images/gradients/08.jpg" alt="" loading="lazy" decoding="async"></div>
-          <div class="work-info"><p class="card-kicker">Dynamics · Coming soon</p><h3>Suspension System Modeling</h3><p>Modeling and simulation.</p></div>
-        </a>
+    <section class="latest-section page-shell" id="latest" aria-labelledby="latest-title">
+      <div class="latest-head">
+        <h2 id="latest-title">Latest Updates</h2>
+        <p>Recently published projects, research, and creative work.</p>
       </div>
+      <div class="feed-grid" id="latest-feed"></div>
+      <noscript><p class="coming-note">Enable JavaScript to see the latest updates, or browse the <a href="portfolio.html">full portfolio</a>.</p></noscript>
+      <a class="explore-link" href="portfolio.html">Explore All Work <span aria-hidden="true">→</span></a>
     </section>
   </main>
 
   <section class="portfolio-contact gradient-field" id="contact" aria-labelledby="contact-title">
     <div class="page-shell portfolio-contact-layout">
-      <h2 id="contact-title">Let's connect.</h2>
+      <h2 id="contact-title">Get in Touch</h2>
       <address class="portfolio-contact-details">
         <span>Dillsburg, PA 17019</span>
         <a href="mailto:ivan_bednostin@outlook.com">ivan_bednostin@outlook.com</a>

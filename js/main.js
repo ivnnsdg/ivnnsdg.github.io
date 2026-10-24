@@ -1,4 +1,42 @@
 (() => {
+  const dropdown = document.querySelector(".nav-dropdown");
+  const subToggle = dropdown && dropdown.querySelector(".submenu-toggle");
+  if (dropdown && subToggle) {
+    const setOpen = (open) => {
+      subToggle.setAttribute("aria-expanded", String(open));
+      dropdown.classList.toggle("is-open", open);
+    };
+    const hoverCapable = window.matchMedia("(hover: hover) and (min-width: 851px)");
+    let openedByHover = false;
+    subToggle.addEventListener("click", () => {
+      if (openedByHover) { openedByHover = false; return; }
+      setOpen(subToggle.getAttribute("aria-expanded") !== "true");
+    });
+    subToggle.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setOpen(true);
+        const first = dropdown.querySelector(".submenu a");
+        if (first) first.focus();
+      }
+    });
+    dropdown.addEventListener("mouseenter", () => { if (hoverCapable.matches) { openedByHover = subToggle.getAttribute("aria-expanded") !== "true"; setOpen(true); } });
+    dropdown.addEventListener("mouseleave", () => { if (hoverCapable.matches) { openedByHover = false; setOpen(false); } });
+    dropdown.addEventListener("focusout", (event) => {
+      if (!dropdown.contains(event.relatedTarget)) setOpen(false);
+    });
+    dropdown.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && dropdown.classList.contains("is-open")) {
+        setOpen(false);
+        subToggle.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!dropdown.contains(event.target)) setOpen(false);
+    });
+    dropdown.querySelectorAll(".submenu a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+  }
+
   const menuButton = document.querySelector(".menu-toggle");
   const navigation = document.querySelector(".site-nav");
 

@@ -25,9 +25,9 @@ test("only the build video is registered", () => {
 test("pages: links, embed, and badge hooks", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
   const index = read("index.html");
-  assert.match(index, /<a class="project-card reveal" data-new-project="plastic-filament-recycling" href="project-recycling\.html"/);
+  assert.match(index, /<a class="work-card is-hero" href="project-recycling\.html" data-new-project="plastic-filament-recycling"/);
   assert.equal((index.match(/data-new-project=/g) || []).length, 1);
-  assert.match(read("projects.html"), /href="project-recycling\.html" class="case-index-item reveal" data-new-project="plastic-filament-recycling"/);
+  assert.match(read("portfolio.html"), /<a class="work-card is-wide" href="project-recycling\.html" data-new-project="plastic-filament-recycling"/);
   const page = read("project-recycling.html");
   assert.match(page, /youtube-nocookie\.com\/embed\/VwZgvXHe2K4/);
   assert.doesNotMatch(page, /autoplay/);
@@ -39,13 +39,47 @@ test("pages: links, embed, and badge hooks", () => {
   assert.doesNotMatch(page, /case-section|Follow the complete|Ender-3|Case study/);
 });
 
-test("All Work lists every project, with research linked to Home", () => {
+test("Portfolio catalog sections and Home highlights", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
-  const work = read("projects.html");
-  for (const name of ["Plastic-to-Filament Recycling System", "Wind Turbine Research", "Popsicle-Stick Truss Bridge", "Dynamic Suspension System", "CAD &amp; Prototyping"]) {
-    assert.ok(work.includes(`<h2>${name}</h2>`), name);
+  const work = read("portfolio.html");
+  for (const id of ["engineering-projects", "research", "design-creative"]) assert.ok(work.includes(`<section class="portfolio-section" id="${id}"`), id);
+  for (const name of ["Plastic-to-Filament Recycling System", "Wind Turbine Research",   "Popsicle-Stick Truss Bridge", "Suspension System Modeling", "CAD &amp; Prototyping"]) {
+      assert.ok(work.includes(`<h3>${name}</h3>`), name);
   }
-  assert.match(work, /href="index\.html#research"/);
-  assert.match(read("index.html"), /id="research"/);
+  assert.match(work, /href="research\.html"/);
+  const home = read("index.html");
+  assert.equal((home.match(/class="work-card/g) || []).length, 3);
+  assert.doesNotMatch(home, /Popsicle|Blender/);
   assert.doesNotMatch(work, /index-code|Academic|Coursework/);
+});
+
+const root = path.join(__dirname, "..");
+const pages = fs.readdirSync(root).filter((f) => f.endsWith(".html") && f !== "projects.html");
+
+test("same main navigation on every page", () => {
+  const navOf = (h) => h.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)[0].replace(/ aria-current="page"/g, "").replace(/>\s+</g, "><");
+  const base = navOf(fs.readFileSync(path.join(root, "index.html"), "utf8"));
+  for (const p of pages) assert.equal(navOf(fs.readFileSync(path.join(root, p), "utf8")), base, p);
+});
+
+test("every local link and anchor resolves", () => {
+  for (const p of [...pages, "projects.html"]) {
+    const html = fs.readFileSync(path.join(root, p), "utf8");
+    for (const m of html.matchAll(/href="([^"#?:]*)(\?[^"#]*)?(#[^"]*)?"/g)) {
+      const [, file, , hash] = m;
+      const target = decodeURIComponent(file) || p;
+      assert.ok(fs.existsSync(path.join(root, target)), `${p} -> ${target}`);
+      if (hash && target.endsWith(".html")) {
+        assert.ok(fs.readFileSync(path.join(root, target), "utf8").includes(`id="${hash.slice(1)}"`), `${p} -> ${target}${hash}`);
+      }
+    }
+  }
+});
+
+test("project pages have breadcrumb and back link", () => {
+  for (const p of ["project-recycling.html", "project-truss.html", "project-dynamics.html", "research.html"]) {
+    const html = fs.readFileSync(path.join(root, p), "utf8");
+    assert.match(html, /class="breadcrumb"/, p);
+    assert.match(html, /← Back to Portfolio/, p);
+  }
 });

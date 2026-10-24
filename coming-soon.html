@@ -13,7 +13,7 @@
   <header class="site-header">
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation"><span class="menu-icon" aria-hidden="true"></span><span class="sr-only">Toggle navigation</span></button>
     <nav class="site-nav" id="site-navigation" aria-label="Main navigation">
-      <a href="projects.html">Work</a><a href="research.html">Research</a><a href="creative.html">Creative</a><a href="about.html">About</a><a href="resume.html">Resume</a><a class="nav-contact" href="#contact">Contact</a>
+      <a href="index.html">Home</a><div class="nav-dropdown"><a href="portfolio.html">Portfolio</a><button class="submenu-toggle" type="button" aria-expanded="false" aria-controls="portfolio-submenu" aria-label="Portfolio sections"><span aria-hidden="true"></span></button><ul class="submenu" id="portfolio-submenu"><li><a href="portfolio.html#engineering-projects">Engineering Projects</a></li><li><a href="portfolio.html#research">Research</a></li><li><a href="portfolio.html#design-creative">Design &amp; Creative Work</a></li></ul></div><a href="about.html">About</a><a href="resume.html">Resume</a><a class="nav-contact" href="index.html#contact">Contact</a>
     </nav>
   </header>
   <main id="main" class="page-shell interior-page">
@@ -23,7 +23,7 @@
       <p class="intro-deck">Projects, technical details, and case studies are currently being prepared.</p>
       <span class="coming-soon-badge">Coming Soon</span>
       <div class="coming-soon-actions">
-        <a class="button button-primary" href="projects.html">Back to Work <span aria-hidden="true">↗</span></a>
+        <a class="button button-primary" href="portfolio.html">Back to Portfolio <span aria-hidden="true">↗</span></a>
         <a class="text-link" href="index.html">Return home <span aria-hidden="true">↗</span></a>
       </div>
     </section>
@@ -49,7 +49,7 @@
         "research": "Research",
         "recycling-project": "Plastic-to-Filament Recycling",
         "truss-bridge": "Popsicle-Stick Truss Bridge",
-        "dynamics-suspension": "Dynamic Suspension System",
+        "dynamics-suspension": "Suspension System Modeling",
       };
       const slug = new URLSearchParams(location.search).get("section") || "";
       const humanized = slug ? slug.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()) : "Portfolio Section";

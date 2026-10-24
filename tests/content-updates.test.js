@@ -27,12 +27,25 @@ test("pages: links, embed, and badge hooks", () => {
   const index = read("index.html");
   assert.match(index, /<a class="project-card reveal" data-new-project="plastic-filament-recycling" href="project-recycling\.html"/);
   assert.equal((index.match(/data-new-project=/g) || []).length, 1);
-  assert.match(read("projects.html"), /href="project-recycling\.html" class="case-index-item/);
+  assert.match(read("projects.html"), /href="project-recycling\.html" class="case-index-item reveal" data-new-project="plastic-filament-recycling"/);
   const page = read("project-recycling.html");
   assert.match(page, /youtube-nocookie\.com\/embed\/VwZgvXHe2K4/);
   assert.doesNotMatch(page, /autoplay/);
   assert.match(page, /allowfullscreen/);
   assert.equal((page.match(/data-new-item=/g) || []).length, 1);
-  assert.match(page, /Coming Soon/);
-  assert.match(page, /Documentation Coming Soon/);
+  assert.match(page, /<h2 id="build-video-title" data-new-item="recycling-build-video">Full Build Video<\/h2>/);
+  assert.equal((page.match(/youtu\.be\/VwZgvXHe2K4/g) || []).length, 1);
+  assert.equal((page.match(/Coming Soon/g) || []).length, 2);
+  assert.doesNotMatch(page, /case-section|Follow the complete|Ender-3|Case study/);
+});
+
+test("All Work lists every project, with research linked to Home", () => {
+  const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
+  const work = read("projects.html");
+  for (const name of ["Plastic-to-Filament Recycling System", "Wind Turbine Research", "Popsicle-Stick Truss Bridge", "Dynamic Suspension System", "CAD &amp; Prototyping"]) {
+    assert.ok(work.includes(`<h2>${name}</h2>`), name);
+  }
+  assert.match(work, /href="index\.html#research"/);
+  assert.match(read("index.html"), /id="research"/);
+  assert.doesNotMatch(work, /index-code|Academic|Coursework/);
 });

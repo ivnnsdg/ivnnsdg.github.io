@@ -29,7 +29,7 @@ test("pages: links, embed, and badge hooks", () => {
   assert.match(index, /id="latest-feed"/);
   assert.match(index, /<a class="explore-link" href="portfolio\.html">Explore All Work/);
   assert.equal((index.match(/data-new-project=|data-new-item=/g) || []).length, 0);
-  assert.match(read("portfolio.html"), /<a class="work-card is-wide" href="project-recycling\.html" data-new-project="plastic-filament-recycling"/);
+  assert.match(read("portfolio.html"), /<a class="work-card is-wide is-recycling" href="project-recycling\.html" data-tone="sustainability" data-new-project="plastic-filament-recycling"/);
   const page = read("project-recycling.html");
   assert.match(page, /youtube-nocookie\.com\/embed\/VwZgvXHe2K4/);
   assert.doesNotMatch(page, /autoplay/);

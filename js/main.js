@@ -94,11 +94,13 @@
     const dialog = document.createElement("dialog");
     dialog.className = "lightbox";
     dialog.setAttribute("aria-label", "Image preview");
-    dialog.innerHTML = '<button class="lightbox-close" type="button" aria-label="Close image">×</button><button class="lightbox-previous" type="button" aria-label="Previous image">←</button><figure><img alt=""><figcaption></figcaption></figure><button class="lightbox-next" type="button" aria-label="Next image">→</button><button class="lightbox-fullscreen" type="button" aria-label="View fullscreen">Fullscreen</button>';
+    dialog.innerHTML = '<button class="lightbox-close" type="button" aria-label="Close image">×</button><button class="lightbox-previous" type="button" aria-label="Previous image">←</button><figure><img alt=""></figure><button class="lightbox-next" type="button" aria-label="Next image">→</button><button class="lightbox-fullscreen" type="button" aria-label="View fullscreen">Fullscreen</button>';
     document.body.append(dialog);
     const image = dialog.querySelector("img");
-    const caption = dialog.querySelector("figcaption");
     const previousButton = dialog.querySelector(".lightbox-previous");
+    const root = document.documentElement;
+    const requestFs = root.requestFullscreen || root.webkitRequestFullscreen;
+    const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
     const nextButton = dialog.querySelector(".lightbox-next");
     let activeImages = [];
     let activeIndex = 0;
@@ -108,7 +110,6 @@
       const link = activeImages[activeIndex];
       image.src = link.href;
       image.alt = link.dataset.alt || link.querySelector("img")?.alt || "Portfolio image";
-      caption.textContent = link.dataset.caption || "";
       previousButton.hidden = activeImages.length < 2;
       nextButton.hidden = activeImages.length < 2;
     };
@@ -129,8 +130,8 @@
     nextButton.addEventListener("click", () => showImage(activeIndex + 1));
     dialog.querySelector(".lightbox-close").addEventListener("click", () => dialog.close());
     dialog.querySelector(".lightbox-fullscreen").addEventListener("click", async () => {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else if (dialog.requestFullscreen) await dialog.requestFullscreen();
+      if (fullscreenElement()) await (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      else if (requestFs) await requestFs.call(root);
     });
     document.addEventListener("keydown", (event) => {
       if (!dialog.open) return;
@@ -143,15 +144,38 @@
         event.preventDefault();
         showImage(activeIndex + 1);
       }
-      if (event.key.toLowerCase() === "f" && dialog.requestFullscreen) dialog.requestFullscreen();
+      if (event.key.toLowerCase() === "f" && requestFs && !fullscreenElement()) requestFs.call(root);
     });
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
     });
     dialog.addEventListener("close", () => {
-      if (document.fullscreenElement === dialog) document.exitFullscreen();
+      if (fullscreenElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
       image.removeAttribute("src");
     });
+
+    const fullscreenButton = dialog.querySelector(".lightbox-fullscreen");
+    if (!requestFs) fullscreenButton.hidden = true;
+    const syncFullscreenLabel = () => {
+      const active = Boolean(fullscreenElement());
+      fullscreenButton.textContent = active ? "Exit fullscreen" : "Fullscreen";
+      fullscreenButton.setAttribute("aria-label", active ? "Exit fullscreen" : "View fullscreen");
+    };
+    document.addEventListener("fullscreenchange", syncFullscreenLabel);
+    document.addEventListener("webkitfullscreenchange", syncFullscreenLabel);
+
+    // Fill the available area, upscaling small sources at most 2x
+    const figure = dialog.querySelector("figure");
+    const fitImage = () => {
+      if (!image.naturalWidth) return;
+      const box = figure.getBoundingClientRect();
+      const scale = Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight, 2);
+      image.style.width = Math.floor(image.naturalWidth * scale) + "px";
+      image.style.height = Math.floor(image.naturalHeight * scale) + "px";
+    };
+    image.addEventListener("load", fitImage);
+    if ("ResizeObserver" in window) new ResizeObserver(fitImage).observe(figure);
+    else window.addEventListener("resize", fitImage);
   }
 
   const lazyVideos = document.querySelectorAll("video[data-lazy-video]");

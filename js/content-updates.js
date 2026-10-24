@@ -41,8 +41,9 @@
       title: "Plastic-to-Filament Recycling System",
       category: "Sustainability · Video",
       subtitle: "Full Build Video · 7 min",
-      coverImage: "assets/images/projects/recycling-build-video.jpg",
-      coverAlt: "Plastic-to-Filament Recycling System build video frame",
+      coverImage: "assets/images/projects/recycling-cover.jpg",
+      coverAlt: "Ender-3 V2 printer beside a recycling Earth symbol, plastic bottles, and green recycled-plastic objects",
+      tone: "sustainability",
       url: "project-recycling.html#build-video",
       updateType: "video",
       status: "published",
@@ -58,6 +59,7 @@
       subtitle: "Drawings and Blender renders",
       coverImage: "assets/images/creative/blender/17909941443034331.webp",
       coverAlt: "Blender render from the digital art gallery",
+      tone: "creative",
       url: "portfolio.html#digital-art",
       updateType: "gallery",
       status: "published",
@@ -123,6 +125,7 @@
       card.className = "feed-card";
       card.href = item.url;
       card.dataset.newItem = item.id;
+      if (item.tone) card.dataset.tone = item.tone;
 
       const media = document.createElement("div");
       media.className = "work-media";

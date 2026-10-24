@@ -90,92 +90,342 @@
   });
 
   const lightboxLinks = [...document.querySelectorAll("a[data-lightbox]")];
-  if (lightboxLinks.length && "HTMLDialogElement" in window) {
-    const dialog = document.createElement("dialog");
-    dialog.className = "lightbox";
-    dialog.setAttribute("aria-label", "Image preview");
-    dialog.innerHTML = '<button class="lightbox-close" type="button" aria-label="Close image">×</button><button class="lightbox-previous" type="button" aria-label="Previous image">←</button><figure><img alt=""></figure><button class="lightbox-next" type="button" aria-label="Next image">→</button><button class="lightbox-fullscreen" type="button" aria-label="View fullscreen">Fullscreen</button>';
-    document.body.append(dialog);
-    const image = dialog.querySelector("img");
-    const previousButton = dialog.querySelector(".lightbox-previous");
-    const root = document.documentElement;
-    const requestFs = root.requestFullscreen || root.webkitRequestFullscreen;
-    const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
-    const nextButton = dialog.querySelector(".lightbox-next");
-    let activeImages = [];
-    let activeIndex = 0;
+  if (lightboxLinks.length) {
+    const MAX_ZOOM = 5;
+    const MAX_FIT_UPSCALE = 2;
+    const viewer = document.createElement("div");
+    viewer.className = "viewer";
+    viewer.hidden = true;
+    viewer.setAttribute("role", "dialog");
+    viewer.setAttribute("aria-modal", "true");
+    viewer.setAttribute("aria-label", "Image viewer");
+    viewer.innerHTML = '<div class="viewer-stage"><img class="viewer-img" alt="" draggable="false"></div>'
+      + '<button class="viewer-btn viewer-close" type="button" aria-label="Close viewer">×</button>'
+      + '<button class="viewer-btn viewer-fullscreen" type="button">Fullscreen</button>'
+      + '<button class="viewer-btn viewer-prev" type="button" aria-label="Previous image">←</button>'
+      + '<button class="viewer-btn viewer-next" type="button" aria-label="Next image">→</button>'
+      + '<div class="viewer-zoom"><button class="viewer-btn viewer-zoom-out" type="button" aria-label="Zoom out">−</button><button class="viewer-btn viewer-fit" type="button">Fit to Screen</button><button class="viewer-btn viewer-zoom-in" type="button" aria-label="Zoom in">+</button></div>';
+    document.body.append(viewer);
 
-    const showImage = (index) => {
-      activeIndex = (index + activeImages.length) % activeImages.length;
-      const link = activeImages[activeIndex];
-      image.src = link.href;
-      image.alt = link.dataset.alt || link.querySelector("img")?.alt || "Portfolio image";
-      previousButton.hidden = activeImages.length < 2;
-      nextButton.hidden = activeImages.length < 2;
+    const stage = viewer.querySelector(".viewer-stage");
+    const image = viewer.querySelector(".viewer-img");
+    const closeButton = viewer.querySelector(".viewer-close");
+    const fullscreenButton = viewer.querySelector(".viewer-fullscreen");
+    const previousButton = viewer.querySelector(".viewer-prev");
+    const nextButton = viewer.querySelector(".viewer-next");
+
+    let items = [];
+    let index = 0;
+    let scale = 1;
+    let tx = 0;
+    let ty = 0;
+    let baseWidth = 0;
+    let baseHeight = 0;
+    let trigger = null;
+    let fallbackFullscreen = false;
+    let inertedElements = [];
+    let pinch = null;
+    let gestureStartScale = 1;
+    const pointers = new Map();
+
+    const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+    const isFullscreen = () => fullscreenElement() === viewer || fallbackFullscreen;
+
+    const applyTransform = (animate) => {
+      image.style.transition = animate ? "transform .14s ease-out" : "none";
+      image.style.transform = "translate(" + tx + "px, " + ty + "px) scale(" + scale + ")";
+      stage.classList.toggle("is-zoomed", scale > 1.001);
     };
+
+    // The image can never be panned past its own edges; when it fits the stage it stays centered.
+    const clampPan = () => {
+      const maxX = Math.max(0, (baseWidth * scale - stage.clientWidth) / 2);
+      const maxY = Math.max(0, (baseHeight * scale - stage.clientHeight) / 2);
+      tx = Math.min(maxX, Math.max(-maxX, tx));
+      ty = Math.min(maxY, Math.max(-maxY, ty));
+    };
+
+    const resetView = (animate) => {
+      scale = 1;
+      tx = 0;
+      ty = 0;
+      applyTransform(animate);
+    };
+
+    // Scale 1 is the fit-to-stage size; the point under (clientX, clientY) stays fixed.
+    const zoomAt = (clientX, clientY, nextScale, animate) => {
+      const rect = stage.getBoundingClientRect();
+      const px = clientX - (rect.left + rect.width / 2);
+      const py = clientY - (rect.top + rect.height / 2);
+      const target = Math.min(MAX_ZOOM, Math.max(1, nextScale));
+      const ratio = target / scale;
+      tx = px - (px - tx) * ratio;
+      ty = py - (py - ty) * ratio;
+      scale = target;
+      if (scale === 1) {
+        tx = 0;
+        ty = 0;
+      }
+      clampPan();
+      applyTransform(animate);
+    };
+
+    const zoomAtCenter = (factor) => {
+      const rect = stage.getBoundingClientRect();
+      zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, scale * factor, true);
+    };
+
+    const fitImage = () => {
+      if (!image.naturalWidth) return;
+      const ratio = Math.min(stage.clientWidth / image.naturalWidth, stage.clientHeight / image.naturalHeight, MAX_FIT_UPSCALE);
+      baseWidth = image.naturalWidth * ratio;
+      baseHeight = image.naturalHeight * ratio;
+      image.style.width = baseWidth + "px";
+      image.style.height = baseHeight + "px";
+      clampPan();
+      applyTransform(false);
+    };
+
+    const showImage = (nextIndex) => {
+      index = (nextIndex + items.length) % items.length;
+      const link = items[index];
+      resetView(false);
+      image.style.visibility = "hidden";
+      image.style.width = "";
+      image.style.height = "";
+      image.alt = link.dataset.alt || link.querySelector("img")?.alt || "Portfolio image";
+      image.src = link.href;
+      previousButton.hidden = items.length < 2;
+      nextButton.hidden = items.length < 2;
+    };
+
+    image.addEventListener("load", () => {
+      fitImage();
+      resetView(false);
+      image.style.visibility = "visible";
+      if (items.length > 1) {
+        [index - 1, index + 1].forEach((neighbor) => {
+          new Image().src = items[(neighbor + items.length) % items.length].href;
+        });
+      }
+    });
+    image.addEventListener("error", () => { image.style.visibility = "visible"; });
+
+    const syncFullscreen = () => {
+      if (fullscreenElement() === viewer) fallbackFullscreen = false;
+      const active = isFullscreen();
+      viewer.classList.toggle("is-fullscreen", active);
+      closeButton.setAttribute("aria-label", active ? "Exit fullscreen" : "Close viewer");
+      fullscreenButton.setAttribute("aria-label", "View fullscreen");
+    };
+
+    const enterFullscreen = async () => {
+      const request = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
+      if (request) {
+        try {
+          await request.call(viewer);
+          syncFullscreen();
+          fitImage();
+          return;
+        } catch (error) {
+          // fall through to the in-page fullscreen mode
+        }
+      }
+      fallbackFullscreen = true;
+      syncFullscreen();
+    };
+
+    const exitFullscreen = async () => {
+      if (fallbackFullscreen) {
+        fallbackFullscreen = false;
+        syncFullscreen();
+      }
+      if (fullscreenElement()) {
+        try {
+          await (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          syncFullscreen();
+          fitImage();
+        } catch (error) {
+          // already left fullscreen
+        }
+      }
+    };
+
+    const resizeObserver = "ResizeObserver" in window ? new ResizeObserver(fitImage) : null;
+
+    const onKeydown = (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const key = event.key;
+      if (key === "Escape") {
+        event.preventDefault();
+        if (isFullscreen()) exitFullscreen();
+        else closeViewer();
+      } else if (key === "ArrowLeft" && items.length > 1) {
+        event.preventDefault();
+        showImage(index - 1);
+      } else if (key === "ArrowRight" && items.length > 1) {
+        event.preventDefault();
+        showImage(index + 1);
+      } else if (key === "+" || key === "=") {
+        event.preventDefault();
+        zoomAtCenter(1.4);
+      } else if (key === "-" || key === "_") {
+        event.preventDefault();
+        zoomAtCenter(1 / 1.4);
+      } else if (key === "0") {
+        event.preventDefault();
+        resetView(true);
+      } else if (key.toLowerCase() === "f") {
+        event.preventDefault();
+        if (isFullscreen()) exitFullscreen();
+        else enterFullscreen();
+      } else if (key === "Tab") {
+        const focusable = [...viewer.querySelectorAll("button")].filter((button) => !button.hidden && getComputedStyle(button).display !== "none");
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!viewer.contains(document.activeElement)) {
+          event.preventDefault();
+          first.focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    const openViewer = (link) => {
+      trigger = link;
+      const group = link.dataset.lightboxGroup;
+      items = group ? lightboxLinks.filter((item) => item.dataset.lightboxGroup === group) : [link];
+      // Everything outside the viewer becomes inert so focus and assistive tech cannot reach the gallery.
+      inertedElements = [...document.body.children].filter((element) => element !== viewer && element.tagName !== "SCRIPT" && !element.inert);
+      inertedElements.forEach((element) => { element.inert = true; });
+      document.documentElement.classList.add("viewer-open");
+      viewer.hidden = false;
+      resizeObserver?.observe(stage);
+      document.addEventListener("keydown", onKeydown);
+      showImage(items.indexOf(link));
+      closeButton.focus();
+    };
+
+    function closeViewer() {
+      if (viewer.hidden) return;
+      viewer.hidden = true;
+      fallbackFullscreen = false;
+      if (fullscreenElement()) exitFullscreen();
+      document.removeEventListener("keydown", onKeydown);
+      resizeObserver?.disconnect();
+      inertedElements.forEach((element) => { element.inert = false; });
+      inertedElements = [];
+      document.documentElement.classList.remove("viewer-open");
+      pointers.clear();
+      pinch = null;
+      stage.classList.remove("is-dragging");
+      image.removeAttribute("src");
+      syncFullscreen();
+      trigger?.focus({ preventScroll: true });
+    }
 
     lightboxLinks.forEach((link) => {
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        const group = link.dataset.lightboxGroup;
-        activeImages = group
-          ? lightboxLinks.filter((item) => item.dataset.lightboxGroup === group)
-          : [link];
-        showImage(activeImages.indexOf(link));
-        dialog.showModal();
+        openViewer(link);
       });
     });
 
-    previousButton.addEventListener("click", () => showImage(activeIndex - 1));
-    nextButton.addEventListener("click", () => showImage(activeIndex + 1));
-    dialog.querySelector(".lightbox-close").addEventListener("click", () => dialog.close());
-    dialog.querySelector(".lightbox-fullscreen").addEventListener("click", async () => {
-      if (fullscreenElement()) await (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-      else if (requestFs) await requestFs.call(root);
-    });
-    document.addEventListener("keydown", (event) => {
-      if (!dialog.open) return;
-      if (event.key === "Escape") dialog.close();
-      if (event.key === "ArrowLeft" && activeImages.length > 1) {
-        event.preventDefault();
-        showImage(activeIndex - 1);
+    previousButton.addEventListener("click", () => showImage(index - 1));
+    nextButton.addEventListener("click", () => showImage(index + 1));
+    closeButton.addEventListener("click", () => (isFullscreen() ? exitFullscreen() : closeViewer()));
+    fullscreenButton.addEventListener("click", enterFullscreen);
+    viewer.querySelector(".viewer-zoom-in").addEventListener("click", () => zoomAtCenter(1.4));
+    viewer.querySelector(".viewer-zoom-out").addEventListener("click", () => zoomAtCenter(1 / 1.4));
+    viewer.querySelector(".viewer-fit").addEventListener("click", () => resetView(true));
+
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    document.addEventListener("webkitfullscreenchange", syncFullscreen);
+    const onFullscreenError = () => {
+      if (!viewer.hidden && !fullscreenElement()) {
+        fallbackFullscreen = true;
+        syncFullscreen();
       }
-      if (event.key === "ArrowRight" && activeImages.length > 1) {
-        event.preventDefault();
-        showImage(activeIndex + 1);
+    };
+    document.addEventListener("fullscreenerror", onFullscreenError);
+    document.addEventListener("webkitfullscreenerror", onFullscreenError);
+
+    // Wheel and trackpad pinch (delivered as ctrl+wheel) zoom the artwork, never the page.
+    viewer.addEventListener("wheel", (event) => {
+      event.preventDefault();
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 400 : 1;
+      const speed = event.ctrlKey ? 0.01 : 0.0018;
+      zoomAt(event.clientX, event.clientY, scale * Math.exp(-event.deltaY * unit * speed), true);
+    }, { passive: false });
+
+    // Safari desktop reports trackpad pinch as gesture events instead of wheel events.
+    viewer.addEventListener("gesturestart", (event) => {
+      event.preventDefault();
+      gestureStartScale = scale;
+    });
+    viewer.addEventListener("gesturechange", (event) => {
+      event.preventDefault();
+      if (!pointers.size) zoomAt(event.clientX, event.clientY, gestureStartScale * event.scale, false);
+    });
+    viewer.addEventListener("gestureend", (event) => event.preventDefault());
+
+    const pinchState = () => {
+      const [a, b] = [...pointers.values()];
+      return { distance: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    };
+
+    stage.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      try {
+        stage.setPointerCapture(event.pointerId);
+      } catch (error) {
+        // pointer already released
       }
-      if (event.key.toLowerCase() === "f" && requestFs && !fullscreenElement()) requestFs.call(root);
-    });
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) dialog.close();
-    });
-    dialog.addEventListener("close", () => {
-      if (fullscreenElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-      image.removeAttribute("src");
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pointers.size === 2) pinch = pinchState();
+      stage.classList.toggle("is-dragging", scale > 1.001 && pointers.size === 1);
     });
 
-    const fullscreenButton = dialog.querySelector(".lightbox-fullscreen");
-    if (!requestFs) fullscreenButton.hidden = true;
-    const syncFullscreenLabel = () => {
-      const active = Boolean(fullscreenElement());
-      fullscreenButton.textContent = active ? "Exit fullscreen" : "Fullscreen";
-      fullscreenButton.setAttribute("aria-label", active ? "Exit fullscreen" : "View fullscreen");
-    };
-    document.addEventListener("fullscreenchange", syncFullscreenLabel);
-    document.addEventListener("webkitfullscreenchange", syncFullscreenLabel);
+    stage.addEventListener("pointermove", (event) => {
+      const pointer = pointers.get(event.pointerId);
+      if (!pointer) return;
+      const dx = event.clientX - pointer.x;
+      const dy = event.clientY - pointer.y;
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      if (pointers.size === 2 && pinch && pinch.distance > 0) {
+        const next = pinchState();
+        zoomAt(next.x, next.y, scale * (next.distance / pinch.distance), false);
+        tx += next.x - pinch.x;
+        ty += next.y - pinch.y;
+        clampPan();
+        applyTransform(false);
+        pinch = next;
+      } else if (pointers.size === 1 && scale > 1.001) {
+        tx += dx;
+        ty += dy;
+        clampPan();
+        applyTransform(false);
+      }
+    });
 
-    // Fill the available area, upscaling small sources at most 2x
-    const figure = dialog.querySelector("figure");
-    const fitImage = () => {
-      if (!image.naturalWidth) return;
-      const box = figure.getBoundingClientRect();
-      const scale = Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight, 2);
-      image.style.width = Math.floor(image.naturalWidth * scale) + "px";
-      image.style.height = Math.floor(image.naturalHeight * scale) + "px";
+    const endPointer = (event) => {
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (!pointers.size) stage.classList.remove("is-dragging");
     };
-    image.addEventListener("load", fitImage);
-    if ("ResizeObserver" in window) new ResizeObserver(fitImage).observe(figure);
-    else window.addEventListener("resize", fitImage);
+    stage.addEventListener("pointerup", endPointer);
+    stage.addEventListener("pointercancel", endPointer);
+
+    stage.addEventListener("dblclick", (event) => {
+      if (scale > 1.001) resetView(true);
+      else zoomAt(event.clientX, event.clientY, 2.5, true);
+    });
   }
 
   const lazyVideos = document.querySelectorAll("video[data-lazy-video]");

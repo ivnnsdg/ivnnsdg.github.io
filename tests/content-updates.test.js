@@ -40,6 +40,13 @@ test("engineering reports are published on November 4 with seven-day NEW badges"
   ]);
 });
 
+test("every content-update page loads the versioned registry", () => {
+  const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
+  for (const page of ["index.html", "portfolio.html", "project-recycling.html", "project-truss.html", "project-dynamics.html"]) {
+    assert.match(read(page), /src="js\/content-updates\.js\?v=20261104" defer>/, page);
+  }
+});
+
 test("pages: links, embed, and badge hooks", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
   const index = read("index.html");

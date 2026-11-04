@@ -65,6 +65,36 @@
       status: "published",
       publishedAt: null,
       updatedAt: null
+    },
+    {
+      id: "popsicle-stick-truss-bridge",
+      projectId: "popsicle-stick-truss-bridge",
+      title: "Popsicle-Stick Truss Bridge",
+      category: "STATICS · ENGINEERING REPORT",
+      subtitle: "Technical Report Published",
+      coverImage: "assets/images/gradients/02.jpg",
+      coverAlt: "",
+      tone: null,
+      url: "project-truss.html",
+      updateType: "report",
+      status: "published",
+      publishedAt: "2026-11-04T10:10:49-05:00",
+      updatedAt: null
+    },
+    {
+      id: "vehicle-suspension-modeling",
+      projectId: "vehicle-suspension-modeling",
+      title: "Suspension System Modeling",
+      category: "DYNAMICS · ENGINEERING REPORT",
+      subtitle: "Technical Report Published",
+      coverImage: "assets/images/gradients/08.jpg",
+      coverAlt: "",
+      tone: null,
+      url: "project-dynamics.html",
+      updateType: "report",
+      status: "published",
+      publishedAt: "2026-11-04T10:10:49-05:00",
+      updatedAt: null
     }
   ];
 

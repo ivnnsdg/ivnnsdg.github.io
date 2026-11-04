@@ -19,8 +19,25 @@ test("project badge follows its items", () => {
   assert.equal(C.isProjectNew("other", new Date("2026-10-25T00:00:00Z"), list), false);
 });
 test("registry holds the two published entries", () => {
-  assert.deepEqual(C.items.map((i) => i.id), ["recycling-build-video", "digital-art-gallery"]);
+  assert.deepEqual(C.items.map((i) => i.id), ["recycling-build-video", "digital-art-gallery", "popsicle-stick-truss-bridge", "vehicle-suspension-modeling"]);
   assert.equal(C.items.find((i) => i.id === "digital-art-gallery").publishedAt, null);
+});
+
+test("engineering reports are published on November 4 with seven-day NEW badges", () => {
+  const reports = C.items.filter((i) => i.updateType === "report");
+  assert.deepEqual(reports.map((i) => i.title), ["Popsicle-Stick Truss Bridge", "Suspension System Modeling"]);
+  assert.ok(reports.every((i) => i.publishedAt === "2026-11-04T10:10:49-05:00"));
+  const now = new Date("2026-11-04T16:00:00Z");
+  for (const report of reports) {
+    assert.equal(C.isNew(report, now), true);
+    assert.equal(C.isNew(report, new Date(Date.parse(report.publishedAt) + C.NEW_WINDOW_MS)), false);
+  }
+  assert.deepEqual(C.selectFeed(now).map((i) => i.id), [
+    "popsicle-stick-truss-bridge",
+    "vehicle-suspension-modeling",
+    "recycling-build-video",
+    "digital-art-gallery"
+  ]);
 });
 
 test("pages: links, embed, and badge hooks", () => {
@@ -83,6 +100,22 @@ test("project pages have breadcrumb and back link", () => {
     const html = fs.readFileSync(path.join(root, p), "utf8");
     assert.match(html, /class="breadcrumb"/, p);
     assert.match(html, /← Back to Portfolio/, p);
+  }
+});
+
+test("engineering report pages embed and link to their matching original PDFs", () => {
+  const projects = [
+    ["project-truss.html", "Term%20Project%20Report_statics_2025_fall.pdf", "assets/documents/Term Project Report_statics_2025_fall.pdf"],
+    ["project-dynamics.html", "Term%20Project%20Report_dynamics_2026_spring_public.pdf", "assets/documents/Term Project Report_dynamics_2026_spring_public.pdf"]
+  ];
+  for (const [page, encodedPdf, diskPdf] of projects) {
+    const html = fs.readFileSync(path.join(root, page), "utf8");
+    assert.equal((html.match(new RegExp(encodedPdf.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g")) || []).length, 4, page);
+    assert.match(html, /<object data="assets\/documents\/Term%20Project%20Report_/);
+    assert.match(html, /Open Full Report/);
+    assert.match(html, /Download PDF/);
+    assert.doesNotMatch(html, /Coming Soon|placeholder for|Summarize the project/);
+    assert.ok(fs.readFileSync(path.join(root, diskPdf)).subarray(0, 5).toString() === "%PDF-", diskPdf);
   }
 });
 

@@ -229,6 +229,11 @@ main > .page-hero.page-shell { margin-block: 36px 0; }
 .pdf-fallback { display: grid; height: 100%; align-content: center; justify-items: center; gap: 12px; padding: 24px; color: var(--muted); text-align: center; }
 .pdf-fallback p { margin: 0; }
 .pdf-fallback a { color: var(--navy); font-weight: 700; text-underline-offset: 3px; text-decoration-color: var(--ochre); }
+.project-report { max-width: 900px; margin-inline: auto; }
+.project-report .section-heading { margin-bottom: 20px; }
+.project-report-actions { margin-bottom: 18px; }
+.project-pdf-viewer { height: clamp(560px, 78vh, 820px); overflow: hidden; border: 1px solid rgba(23, 63, 95, .14); border-radius: var(--radius-card); background: #f7f6f2; box-shadow: 0 8px 24px rgba(31, 43, 47, .07); }
+.project-pdf-viewer object { width: 100%; height: 100%; display: block; }
 .resume-contact-section { padding-block: 35px; border-top: 1px solid var(--line); background: var(--paper-deep); }
 .resume-contact-layout { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 20px 36px; }
 .resume-contact-identity .eyebrow { margin-bottom: 8px; }
@@ -597,4 +602,6 @@ body { line-height: 1.55; }
 @media (max-width: 600px) {
   .work-grid, .work-grid-3 { grid-template-columns: 1fr; }
   .work-card.is-hero .work-media { aspect-ratio: 16 / 10; }
+  .project-pdf-viewer { min-height: 420px; height: min(68vh, 660px); }
+  .project-report-actions .button { flex: 1 1 100%; }
 }

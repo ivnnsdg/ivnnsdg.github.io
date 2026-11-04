@@ -26,7 +26,7 @@ test("registry holds the two published entries", () => {
 test("engineering reports are published on November 4 with seven-day NEW badges", () => {
   const reports = C.items.filter((i) => i.updateType === "report");
   assert.deepEqual(reports.map((i) => i.title), ["Popsicle-Stick Truss Bridge", "Suspension System Modeling"]);
-  assert.ok(reports.every((i) => i.publishedAt === "2026-11-04T10:10:49-05:00"));
+  assert.ok(reports.every((i) => i.publishedAt === "2026-11-04T15:37:14Z"));
   const now = new Date("2026-11-04T16:00:00Z");
   for (const report of reports) {
     assert.equal(C.isNew(report, now), true);

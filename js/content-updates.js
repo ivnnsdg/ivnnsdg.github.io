@@ -78,7 +78,7 @@
       url: "project-truss.html",
       updateType: "report",
       status: "published",
-      publishedAt: "2026-11-04T10:10:49-05:00",
+      publishedAt: "2026-11-04T15:37:14Z",
       updatedAt: null
     },
     {
@@ -93,7 +93,7 @@
       url: "project-dynamics.html",
       updateType: "report",
       status: "published",
-      publishedAt: "2026-11-04T10:10:49-05:00",
+      publishedAt: "2026-11-04T15:37:14Z",
       updatedAt: null
     }
   ];

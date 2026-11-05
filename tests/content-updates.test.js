@@ -137,6 +137,9 @@ test("engineering report pages embed and link to their matching original PDFs", 
   for (const [page, encodedPdf, diskPdf] of projects) {
     const html = fs.readFileSync(path.join(root, page), "utf8");
     assert.equal((html.match(new RegExp(encodedPdf.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g")) || []).length, 4, page);
+    if (page === "project-dynamics.html") {
+      assert.equal((html.match(/Term%20Project%20Report_dynamics_2026_spring_public\.pdf\?v=signed-20261105/g) || []).length, 4);
+    }
     assert.match(html, /<object data="assets\/documents\/Term%20Project%20Report_/);
     assert.match(html, /Open Full Report/);
     assert.match(html, /Download PDF/);

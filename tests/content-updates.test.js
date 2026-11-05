@@ -43,7 +43,7 @@ test("engineering reports are published on November 4 with seven-day NEW badges"
 test("every content-update page loads the versioned registry", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
   for (const page of ["index.html", "portfolio.html", "project-recycling.html", "project-truss.html", "project-dynamics.html"]) {
-    assert.match(read(page), /src="js\/content-updates\.js\?v=20261104" defer>/, page);
+    assert.match(read(page), /src="js\/content-updates\.js\?v=20261106" defer>/, page);
   }
 });
 
@@ -108,6 +108,25 @@ test("project pages have breadcrumb and back link", () => {
     assert.match(html, /class="breadcrumb"/, p);
     assert.match(html, /← Back to Portfolio/, p);
   }
+});
+
+test("statics project uses the added image asset on Portfolio and Home", () => {
+  const report = C.items.find((item) => item.id === "popsicle-stick-truss-bridge");
+  assert.equal(report.coverImage, "assets/images/For intro-photo/Statics_photo_intro.png");
+  assert.match(report.coverAlt, /popsicle-stick truss bridge/i);
+  const html = fs.readFileSync(path.join(root, "portfolio.html"), "utf8");
+  assert.match(html, /href="project-truss\.html" data-new-project="popsicle-stick-truss-bridge">[\s\S]*?<img src="assets\/images\/For%20intro-photo\/Statics_photo_intro\.png" alt="[^"]+" loading="lazy" decoding="async" width="1670" height="942">/);
+  assert.equal(report.coverImage, "assets/images/For intro-photo/Statics_photo_intro.png");
+  assert.ok(fs.existsSync(path.join(root, report.coverImage)));
+});
+
+test("dynamics project uses the added image asset on Portfolio and Home", () => {
+  const report = C.items.find((item) => item.id === "vehicle-suspension-modeling");
+  assert.equal(report.coverImage, "assets/images/For intro-photo/Dynamics_photo_intro.png");
+  assert.match(report.coverAlt, /MATLAB suspension model/i);
+  const html = fs.readFileSync(path.join(root, "portfolio.html"), "utf8");
+  assert.match(html, /href="project-dynamics\.html" data-new-project="vehicle-suspension-modeling">[\s\S]*?<img src="assets\/images\/For%20intro-photo\/Dynamics_photo_intro\.png" alt="[^"]+" loading="lazy" decoding="async" width="1448" height="1086">/);
+  assert.ok(fs.existsSync(path.join(root, report.coverImage)));
 });
 
 test("engineering report pages embed and link to their matching original PDFs", () => {

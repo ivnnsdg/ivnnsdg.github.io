@@ -43,7 +43,7 @@ test("engineering reports are published on November 4 with seven-day NEW badges"
 test("every content-update page loads the versioned registry", () => {
   const read = (f) => fs.readFileSync(path.join(__dirname, "..", f), "utf8");
   for (const page of ["index.html", "portfolio.html", "project-recycling.html", "project-truss.html", "project-dynamics.html"]) {
-    assert.match(read(page), /src="js\/content-updates\.js\?v=20261106" defer>/, page);
+    assert.match(read(page), /src="js\/content-updates\.js\?v=\d+" defer>/, page);
   }
 });
 

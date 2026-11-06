@@ -164,6 +164,7 @@ main > .page-hero.page-shell { margin-block: 36px 0; }
 .page-hero__eyebrow a, .page-hero .eyebrow a { color: inherit; text-decoration-color: var(--ochre); text-underline-offset: 3px; }
 .page-hero__title { margin: 0; max-width: 24ch; font-size: var(--fs-h1); line-height: 1.08; text-wrap: balance; }
 .page-hero__subtitle { max-width: 62ch; margin: 14px 0 0; color: var(--muted); font: clamp(17px, 1.4vw, 20px)/1.55 var(--serif); }
+.page-hero__subtitle + .page-hero__subtitle { margin-top: 1em; }
 .page-hero__meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 22px 0 0; color: var(--muted); font-size: var(--fs-eyebrow); letter-spacing: 1.2px; text-transform: uppercase; }
 .page-hero__meta strong { color: var(--navy); font-weight: 700; }
 .page-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 24px; }

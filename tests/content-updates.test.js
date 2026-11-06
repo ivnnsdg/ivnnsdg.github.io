@@ -112,20 +112,20 @@ test("project pages have breadcrumb and back link", () => {
 
 test("statics project uses the added image asset on Portfolio and Home", () => {
   const report = C.items.find((item) => item.id === "popsicle-stick-truss-bridge");
-  assert.equal(report.coverImage, "assets/images/For intro-photo/Statics_photo_intro.png");
+  assert.equal(report.coverImage, "assets/images/portfolio-cards/statics-card.png");
   assert.match(report.coverAlt, /popsicle-stick truss bridge/i);
   const html = fs.readFileSync(path.join(root, "portfolio.html"), "utf8");
-  assert.match(html, /href="project-truss\.html" data-new-project="popsicle-stick-truss-bridge">[\s\S]*?<img src="assets\/images\/For%20intro-photo\/Statics_photo_intro\.png" alt="[^"]+" loading="lazy" decoding="async" width="1670" height="942">/);
-  assert.equal(report.coverImage, "assets/images/For intro-photo/Statics_photo_intro.png");
+  assert.match(html, /href="project-truss\.html" data-new-project="popsicle-stick-truss-bridge">[\s\S]*?<img src="assets\/images\/portfolio-cards\/statics-card\.png" alt="[^"]+" loading="lazy" decoding="async" width="1670" height="942">/);
+  assert.equal(report.coverImage, "assets/images/portfolio-cards/statics-card.png");
   assert.ok(fs.existsSync(path.join(root, report.coverImage)));
 });
 
 test("dynamics project uses the added image asset on Portfolio and Home", () => {
   const report = C.items.find((item) => item.id === "vehicle-suspension-modeling");
-  assert.equal(report.coverImage, "assets/images/For intro-photo/Dynamics_photo_intro.png");
+  assert.equal(report.coverImage, "assets/images/portfolio-cards/dynamics-card.png");
   assert.match(report.coverAlt, /MATLAB suspension model/i);
   const html = fs.readFileSync(path.join(root, "portfolio.html"), "utf8");
-  assert.match(html, /href="project-dynamics\.html" data-new-project="vehicle-suspension-modeling">[\s\S]*?<img src="assets\/images\/For%20intro-photo\/Dynamics_photo_intro\.png" alt="[^"]+" loading="lazy" decoding="async" width="1448" height="1086">/);
+  assert.match(html, /href="project-dynamics\.html" data-new-project="vehicle-suspension-modeling">[\s\S]*?<img src="assets\/images\/portfolio-cards\/dynamics-card\.png" alt="[^"]+" loading="lazy" decoding="async" width="1448" height="1086">/);
   assert.ok(fs.existsSync(path.join(root, report.coverImage)));
 });
 

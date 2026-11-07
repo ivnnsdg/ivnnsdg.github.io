@@ -75,7 +75,15 @@
         }
       });
     }, { threshold: 0.12 });
-    revealItems.forEach((item) => observer.observe(item));
+    revealItems.forEach((item) => {
+      const bounds = item.getBoundingClientRect();
+      if (bounds.top < window.innerHeight && bounds.bottom > 0) {
+        item.classList.add("is-visible");
+      } else {
+        item.classList.add("is-pending");
+        observer.observe(item);
+      }
+    });
   } else {
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }

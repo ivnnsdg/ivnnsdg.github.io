@@ -230,6 +230,9 @@ main > .page-hero.page-shell { margin-block: 36px 0; }
 .pdf-fallback { display: grid; height: 100%; align-content: center; justify-items: center; gap: 12px; padding: 24px; color: var(--muted); text-align: center; }
 .pdf-fallback p { margin: 0; }
 .pdf-fallback a { color: var(--navy); font-weight: 700; text-underline-offset: 3px; text-decoration-color: var(--ochre); }
+.project-video { max-width: 900px; margin: 28px auto; }
+.project-video video { display: block; width: 100%; height: auto; border-radius: var(--radius-card); background: #000; }
+.project-video figcaption { margin-top: 10px; font-size: .85rem; color: #5b6770; text-align: center; }
 .project-report { max-width: 900px; margin-inline: auto; }
 .project-report .section-heading { margin-bottom: 20px; }
 .project-report-actions { margin-bottom: 18px; }
